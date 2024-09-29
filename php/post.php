@@ -8,7 +8,7 @@ if ($_POST) {
     switch ($action) {
         case 'publicar':
 
-            $valido['success']=array('success'=>false,'mensaje'=>"");
+            $valido['success']=array('success'=>false,'mensaje'=>"", 'idpost' => null);
 
             $post = $_POST['post'];
             $id = $_POST['idusuario'];
