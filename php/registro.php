@@ -115,13 +115,12 @@ if ($_POST) {
                     $valido['success'] = true;
                     $valido['email'] = $row['email'];
                     $valido['nombre'] = $row['nombre'];
-                    
-                    // Verifica si hay una imagen guardada en la base de datos
+
                     if ($row['foto'] && !empty($row['foto'])) {
                         $valido['foto'] = $row['foto'];
                     } else {
-                        // Si no hay imagen, asigna una imagen por defecto
-                        $valido['foto'] = "img_profile/icp.jpeg"; // Imagen por defecto
+
+                        $valido['foto'] = "img_profile/icp.jpeg";
                     }
                 } else {
                     $valido['success'] = false;
@@ -136,24 +135,30 @@ if ($_POST) {
                 case "saveperfil":
                     header('Content-Type: application/json; charset=utf-8');
                     $valido = ['success' => false, 'mensaje' => '', 'foto' => ''];
-                    $a = $_POST['nombre'];
-                    $c = $_POST['usuario'];
-                    $fileName = $_FILES['foto']['name'];
+                    
+                    $nombre = $_POST['nombre'];
+                    $email = $_POST['usuario']; 
+                    $tipo = $_FILES['foto']['type'];
+                    $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                    $filename = "img_" . time() . "." . $extension;
                     $fileTmpName = $_FILES['foto']['tmp_name'];
                     $uploadDirectory = '../img_profile/';
-                
+
                     if (!is_dir($uploadDirectory)) {
                         mkdir($uploadDirectory, 0755, true);
                     }
-                
-                    $filePath = $uploadDirectory . basename($fileName);
+
+                    $filePath = $uploadDirectory . basename($filename);
+                    $filePath2 = "img_profile/" . basename($filename);
                 
                     if (move_uploaded_file($fileTmpName, $filePath)) {
-                        $check = "UPDATE usuario SET nombre='$a', foto='$filePath' WHERE email='$c'";
+
+                        $check = "UPDATE usuario SET nombre='$nombre', foto='$filePath2' WHERE email='$email'";
+                        
                         if ($cx->query($check) === TRUE) {
                             $valido['success'] = true;
                             $valido['mensaje'] = "SE GUARDÓ CORRECTAMENTE";
-                            $valido['foto'] = $filePath;
+                            $valido['foto'] = $filePath2; 
                         } else {
                             $valido['success'] = false;
                             $valido['mensaje'] = "ALGO SALIÓ MAL EN LA ACTUALIZACIÓN";
@@ -165,6 +170,7 @@ if ($_POST) {
                 
                     echo json_encode($valido);
                     break;
+                
 }
 }
 ?>

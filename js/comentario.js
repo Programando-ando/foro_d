@@ -34,6 +34,7 @@ const comentario = async (idpost) => {
         if (json.success) {
             Swal.fire({ title: "BIEN!", text: json.mensaje, icon: "success" });
             document.getElementById(`inputC_${idpost}`).value = "";
+            location.reload();
         } else {
             Swal.fire({ title: "ERROR", text: json.mensaje, icon: "error" });
         }
@@ -43,7 +44,6 @@ const comentario = async (idpost) => {
         console.error("Error en la conexión:", error);
     }
 }
-
 
 
 

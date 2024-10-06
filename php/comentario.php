@@ -14,7 +14,7 @@ if ($_POST) {
             $idU = $_POST['idusuario'];
             $idP = $_POST['idpost'];
 
-            $sql = "INSERT INTO comentario VALUES (null,'$comentario',$idU,$idP)";
+            $sql = "INSERT INTO comentario VALUES (null,'$comentario',null,$idU,$idP)";
             if ($cx->query($sql)) {
                 $valido['success']=true;
                 $valido['mensaje']="SE PUBLICO CORRECTAMENTE";
@@ -27,8 +27,10 @@ if ($_POST) {
        break;
 
        case 'cargarComentario':
-        $result = $cx->query("SELECT usuario.idusuario,usuario.nombre,usuario.foto,comentario.comentario,comentario.idcomentario
-        FROM comentario INNER JOIN usuario ON(usuario.idusuario=comentario.idusuario)");
+        $idP = $_POST['idpost'];
+        $result = $cx->query("SELECT usuario.idusuario,usuario.nombre,usuario.foto,comentario.comentario,comentario.idcomentario,comentario.fecha
+         FROM comentario INNER JOIN usuario ON (usuario.idusuario = comentario.idusuario) WHERE comentario.idpost = '$idP'");
+
         $rows = array();
         while ($row = $result->fetch_assoc()){
             $rows[] = $row;

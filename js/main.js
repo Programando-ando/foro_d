@@ -1,8 +1,10 @@
-var sesion=localStorage.getItem('usuario') || "null";
+var sesion = localStorage.getItem('usuario');
 
-if(sesion=="null"){
-    window.location.href="index.html"
+if (sesion === null || sesion === "null") {
+    localStorage.setItem('usuario', JSON.stringify({}));
+    window.location.href = "index.html";
 }
+
 
 function validarCorreo(correo) {
     var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
@@ -20,7 +22,7 @@ const registrar = async ()=>{
     let password = document.getElementById("pass").value;
     let nombre = document.getElementById("nombre").value;
     let foto = document.getElementById("foto").files[0];
-
+    
     if (usuario.trim() == "" || password === "" || nombre.trim() === "") {
         Swal.fire({title: "ERROR", text: "Campos vacíos", icon: "error"});
         return;
@@ -120,6 +122,7 @@ document.getElementById("salir").onclick=()=>{
     }).then((result)=>{
     if(result.isConfirmed){
     window.location.href="index.html"
+    localStorage.clear();
     }
 });
 }
@@ -137,8 +140,9 @@ const cargarPerfil = async () => {
         if (json.success) {
             document.getElementById("email").innerHTML = json.email;
             document.getElementById("nombre").value = json.nombre;
-            document.getElementById("foto-preview").innerHTML = `<img src="${json.foto}" class="foto-perfil">`; // Usa la ruta relativa
-            document.getElementById("foto_perfil").src = `${json.foto}`;
+            document.getElementById("foto-preview").innerHTML = `<img src="${json.foto}" class="foto-perfil">`;
+            document.getElementById("foto_perfil").src = json.foto;
+
         }else {
             Swal.fire({ title: "ERROR", text: json.mensaje, icon: "error" });
         }

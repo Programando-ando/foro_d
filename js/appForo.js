@@ -48,7 +48,9 @@ const cargarPost = async () => {
     datos.append("action", "cargarPost");
     let respuesta = await fetch("php/post.php", { method: 'POST', body: datos });
     let json = await respuesta.json();
-    var divPost = ``;
+
+    document.getElementById("divPosts").innerHTML = ""; 
+
     json.map(post => {
         let divPost = `
         <div class="card w-50 m-auto mt-3">
@@ -79,7 +81,8 @@ const cargarPost = async () => {
                 </h2>
                 <div id="collapse${post.idpost}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <div id="comen"></div>
+                        <!-- Contenedor de comentarios con un ID único -->
+                        <div id="comen${post.idpost}"></div>
                     </div>
                 </div>
             </div>
@@ -88,9 +91,11 @@ const cargarPost = async () => {
 
     document.getElementById("divPosts").innerHTML += divPost;
 
-    cargarComentario(post.idpost);
+    cargarComentario(post.idpost); 
     });
 }
+
+
 
 cargarPost();
 
@@ -150,7 +155,7 @@ const miPost = async() =>{
                 </h2>
                 <div id="collapse${post.idpost}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <div id="comen"></div>
+                        <div id="comen${post.idpost}"></div>
                     </div>
                 </div>
             </div>
@@ -164,12 +169,10 @@ const miPost = async() =>{
 
 }
 
-
-
 const cargarComentario = async (idpost) => {
     let datos = new FormData();
     datos.append("action", "cargarComentario");
-    datos.append("idpost", idpost); 
+    datos.append("idpost", idpost);  // Asegúrate de que 'idpost' no sea undefined
     
     let respuesta = await fetch("php/comentario.php", { method: 'POST', body: datos });
     let json = await respuesta.json();
@@ -187,9 +190,11 @@ const cargarComentario = async (idpost) => {
                 </ul>
         `;
 
-        document.getElementById(`comen`).innerHTML = divComentario;
+        document.getElementById(`comen${idpost}`).innerHTML = divComentario;
     });
 }
+
+
 
 function limpiarP (){
     let post = document.getElementById("post");
